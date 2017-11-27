@@ -97,7 +97,7 @@ public class Example implements ThrowingSelfValidator {
 
 ### Scala Flavour
 
-A `val` of type `ConstraintFunction` can be assigned any function literal that is of type `() => Boolean`.
+A `val` of type `ConstraintFunction` can be assigned any function literal that is of type `() => Boolean`.  Because of scala type inference, the type must be explicitly given, or it will be `Function0[Boolean]` and not be picked up by the validator, similary, allowing the validator to pick up `Function0[Boolean]` is sloppy typing, and could lead to logic errors in validation that are hard to debug.
 This must be a `val` not a `def` due to the way JSR303 works.  Should also work with a `var`, but that would break immutability (constraints should be immutable), and has not been tested.
 
 Two traits with implemented methods are provided: `ThrowingSelfValidating` and `ReturningSelfValidating`, which add self validating behaviour that throws exceptions or returns sets in that order.  Both these interfaces extend the `SelfValidating` interface in the core.
@@ -112,7 +112,9 @@ case class Example(start: Int, end: Int) extends ThrowingSelfValidator {
 ### Groovy Flavour
 
 An instance field of type `ConstraintFunction` can be used with `ConstraintFunction.of(Closure)` to create a
-validation function from a groovy closure. Due to groovy's closure's being implemented as classes, they could cause issues with multiple inheritance for implementing parties.  While there are facilities to coerce closure literals to a specific class using the `MetaClass` class and the `asType(Class)`, I could not get the necessary meta-object protocol magic to work.
+validation function from a groovy closure. 
+Because groovy can consider any `def` to be `Object` because of minimal compile time type checking, the type must be explicitly give and not be picked up by the validator.
+Due to groovy's closure's being implemented as classes, they could cause issues with multiple inheritance for implementing parties.  While there are facilities to coerce closure literals to a specific class using the `MetaClass` class and the `asType(Class)`, I could not get the necessary meta-object protocol magic to work.
 
 As with Java8, while this could be used with a static field, the scope of the instance members used for validation would not be available, so it's not advisable.  Again, as with Java8 It's advisable to make it `final` since constraints are immutable.
 
