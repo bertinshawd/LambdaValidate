@@ -1,0 +1,10 @@
+apply plugin:'groovy'
+
+dependencies {
+  compile localGroovy()
+  compile project(":core")
+}
+
+test {
+  include "**/ReturningGroupedTest*"
+}

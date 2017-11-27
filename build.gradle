@@ -1,0 +1,69 @@
+
+allprojects {
+  apply plugin: 'eclipse'
+  apply plugin: 'java'
+  apply plugin: 'jacoco'
+  
+  repositories { mavenCentral() }
+
+}
+
+subprojects {
+
+  dependencies {
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
+    
+    testCompile group: 'org.testng', name: 'testng', version: '6.11'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+    testRuntime group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.2.Final'
+    testRuntime group: 'org.apache.tomcat', name: 'tomcat-jasper-el', version: '9.0.1'
+  }
+
+  
+  sourceSets {
+      test {
+          java {
+              srcDir '../core/src/test/java'
+          }
+      }
+  }
+  
+  test {
+    useTestNG()
+
+    testLogging {
+      exceptionFormat = 'full'
+      events "failed", "standardOut", "standardError" //, "passed", "skipped"
+    }
+
+    jacoco { append = false }
+  }
+  
+  jacoco {
+    toolVersion = "0.7.9"
+  }
+  
+  jacocoTestReport {
+    reports {
+      xml.enabled false
+      csv.enabled false
+      html.enabled true
+    }
+  }
+
+  project.tasks['check'].dependsOn 'jacocoTestReport'
+}
+
+
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories = files(subprojects.sourceSets.main.output)
+    executionData = files(subprojects.findAll{it.name != 'core'}.jacocoTestReport.executionData)    
+    dependsOn subprojects.test.collect{it.path}
+    reports {
+        html.enabled = true
+        xml.enabled = false
+        csv.enabled = false
+    }
+}
