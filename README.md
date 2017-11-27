@@ -1,4 +1,4 @@
-# Functional Extension to the Java Validation Validation API (JSR303)
+# Functional Extension to the Java Validation API (JSR303)
 
 This small extension allows the simple declaration of validation as functions that 
 take allow validation to be done in the scope of the declaring class.
