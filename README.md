@@ -150,7 +150,7 @@ Two traits with implemented methods are provided: `ThrowingSelfValidating` and `
 
 ```scala
 case class Example(start: Int, end: Int) extends ThrowingSelfValidator {
-  @ValidateWith(message = "start must be less than end")
+  @ValidationFunction(message = "start must be less than end")
   val startLessThanEnd = ConstraintFunction { start < end }
 }
 ```
@@ -201,7 +201,7 @@ public static class CaseClass extends BaseTestCase1 implements SelfValidate {
   public boolean validate(Class<?>... groups) throws ConstraintViolationException, ValidationException {
     return ValidationHandler.instance().thrower.validate(this);
   }
-  @ValidateWith(message = "start must be less than end")
+  @ValidationFunction(message = "start must be less than end")
   private final ConstraintFunction startLessThanEnd = new ConstraintFunction() {
     @Override
     public boolean validate() {
