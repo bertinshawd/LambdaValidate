@@ -46,8 +46,7 @@ Gradle wrapper is included for this project, with default tasks (in this case `b
 * Windows: `C:\repos\lambdavalidation\> gradlew`
 * *nix: `~/repos/lambdavalidation/ $ ./gradlew`
 
-> building with java 7
-> warning!
+:warning:
 
 ### Outputs
 
