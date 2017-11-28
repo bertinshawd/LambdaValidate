@@ -46,7 +46,13 @@ Gradle wrapper is included for this project, with default tasks (in this case `b
 * Windows: `C:\repos\lambdavalidation\> gradlew`
 * *nix: `~/repos/lambdavalidation/ $ ./gradlew`
 
-:warning:
+### :warning: Java 7 classpath
+
+if you build without setting the bootclasspath for java7 and core, you will get warnings.  There are no known issues created by this, but if you want to get rid of the warnings do one of the following (examples are shown for debian style distro's usual location for OpenJDK7, change them to match your system):
+
+* On the command line: add `-Pjava7BootstrapClassPath=/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar`
+* In the root properties file: uncomment the line `#java7BootstrapClassPath=/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar` and comment the line `java7BootstrapClassPath=`
+ * If you do do this, please be careful of the change going upstream.
 
 ### Outputs
 
