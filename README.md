@@ -52,7 +52,7 @@ if you build without setting the bootclasspath for java7 and core, you will get 
 
 * On the command line: add `-Pjava7BootstrapClassPath=.../rt.jar`
 * In the root properties file: uncomment the line `#java7BootstrapClassPath=.../rt.jar` and comment the line `java7BootstrapClassPath=`
- * If you do do this, please be careful of the change going upstream.
+  * If you do do this, please be careful of the change going upstream.
 
 
 
