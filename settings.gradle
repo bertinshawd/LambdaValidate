@@ -3,3 +3,11 @@ include 'java7'
 include 'java8'
 include 'groovy'
 include 'scala'
+
+rootProject.name = "lambdavalidation"
+
+project(':core').name = 'lambdavalidation.core'
+project(':java7').name = 'lambdavalidation.java7'
+project(':java8').name = 'lambdavalidation.java8'
+project(':groovy').name = 'lambdavalidation.groovy'
+project(':scala').name = 'lambdavalidation.scala'

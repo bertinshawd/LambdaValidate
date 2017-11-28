@@ -68,6 +68,10 @@ with the provided `ValidationService` singleton).
 
 `ThrowingSelfValidating` and `ReturningSelfValidating` are interfaces _NOT_ in the core components, but rather are the convention for extending the `SelfValidating` interface for cases where the behaviour is not explicitly required to be added (such as Scala traits or Java8 default methods).
 
+### Groups and Payloads
+
+The `@ValidationFunction` annotation works with JSR303 validation groups and payloads.
+
 ## "Flavours"
 
 Each "Flavour" is a language specific implementation of the core functionality, and tries to be a language-specific implementation of the languages' functional features.  Each flavour has it's own package to prevent namespace pollution (important if you use multiple languages for validatable objects), and 
@@ -97,7 +101,8 @@ public class Example implements ThrowingSelfValidator {
 
 ### Scala Flavour
 
-A `val` of type `ConstraintFunction` can be assigned any function literal that is of type `() => Boolean`.
+The companion object `ConstraintFunction` has an `apply(=> Boolean)` function that can be used to create a constraint function that can then be assigned to a `val` with type inference, overall requiring very little boilerplate.
+Alternatively a `val` of type `ConstraintFunction` can be assigned any function literal that is of type `() => Boolean`, but the companion object style requires less boilerplate and is generally prefferable.   
 This must be a `val` not a `def` due to the way JSR303 works.  Should also work with a `var`, but that would break immutability (constraints should be immutable), and has not been tested.
 
 Two traits with implemented methods are provided: `ThrowingSelfValidating` and `ReturningSelfValidating`, which add self validating behaviour that throws exceptions or returns sets in that order.  Both these interfaces extend the `SelfValidating` interface in the core.
@@ -105,29 +110,31 @@ Two traits with implemented methods are provided: `ThrowingSelfValidating` and `
 ```scala
 case class Example(start: Int, end: Int) extends ThrowingSelfValidator {
   @ValidateWith(message = "start must be less than end")
-  val startLessThanEnd: ConstraintFunction = () => { start < end }
+  val startLessThanEnd = ConstraintFunction { start < end }
 }
 ```
 
 ### Groovy Flavour
 
-An instance field of type `ConstraintFunction` can be used with `ConstraintFunction.of(Closure)` to create a
-validation function from a groovy closure. Due to groovy's closure's being implemented as classes, they could cause issues with multiple inheritance for implementing parties.  While there are facilities to coerce closure literals to a specific class using the `MetaClass` class and the `asType(Class)`, I could not get the necessary meta-object protocol magic to work.
+An instance field of type `ConstraintFunction` can be used with `constraingFunction(Closure)` provided by the `ConstraintFunctionBuilder` trait to create a validation function from a groovy closure. Due to groovy's closure's being implemented as classes, they could cause issues with multiple inheritance for implementing parties.  While there are facilities to coerce closure literals to a specific class using the `MetaClass` class and the `asType(Class)`, I could not get the necessary meta-object protocol magic to work.
 
 As with Java8, while this could be used with a static field, the scope of the instance members used for validation would not be available, so it's not advisable.  Again, as with Java8 It's advisable to make it `final` since constraints are immutable.
+
+Sepcific to Groovy `def` is treated as an `Object`, this means you need to declare constraint functions as type `ConstraintFunction`, or there will be a `ValidationException` because the JSR303 spec does not 
+require the instance's runtime ttype type to be inspected, but uses the field's declared type.
 
 Two traits with default methods are provided: `ThrowingSelfValidating` and `ReturningSelfValidating`, which add self validating behaviour that throws exceptions or returns sets in that order.  Both these traits are extensions of `SelfValidating` interface in the core.
 
 
 ```groovy
-public class Example implements ThrowingSelfValidator {
+public class Example implements ThrowingSelfValidator, ConstraintFunctionBuilder {
   protected Integer start, end;
   public Example(final Integer start, final Integer end) {
     this.start = start;
     this.end = end;
   }
   @ValidationFunction(message = "start must be less than end")
-  private final ConstraintFunction startLessThanEnd = ConstraintFunction.of { start < end }
+  private final ConstraintFunction startLessThanEnd = constraintFunction { start < end }
 }
 ```
 
@@ -163,10 +170,9 @@ public static class CaseClass extends BaseTestCase1 implements SelfValidate {
 }
 ```
 
+### Make your own flavour.
 
-### Extending this to your favourite JVM language
-
-Like Kotlin or Clojure?  Just extend the `ConstraintFunction` interface in 
+Like Kotlin or Clojure?  Just extend the `ConstraintFunction` core in 
 whatever idiomatic way makes sense to you and the language.  
 
 Basically there are just three things to do:
