@@ -1,4 +1,4 @@
-# Functional Extension to the Java Validation Validation API (JSR303)
+# Functional Extension to the Java Validation API (JSR303)
 
 This small extension allows the simple declaration of validation as functions that 
 take allow validation to be done in the scope of the declaring class.
@@ -67,10 +67,6 @@ The provided implementation of `SelfValidating` use this validator, but you're f
 with the provided `ValidationService` singleton).
 
 `ThrowingSelfValidating` and `ReturningSelfValidating` are interfaces _NOT_ in the core components, but rather are the convention for extending the `SelfValidating` interface for cases where the behaviour is not explicitly required to be added (such as Scala traits or Java8 default methods).
-
-### Groups and Payloads
-
-The `@ValidationFunction` annotation works with JSR303 validation groups and payloads.
 
 ## "Flavours"
 
