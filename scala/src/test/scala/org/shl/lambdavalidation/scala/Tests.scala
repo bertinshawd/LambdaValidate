@@ -1,14 +1,14 @@
 /*
  * Copyright © Daniel Bertinshaw, 2017
- * 
+ *
  * See the LICENSE file distributed with this work for additional
- * information regarding copyright ownership.  The ASF licenses 
+ * information regarding copyright ownership.  The ASF licenses
  * this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -31,11 +31,11 @@ import org.shl.lambdavalidation.validationgroups.NonStrict
 import org.shl.lambdavalidation.validationgroups.Strict
 import org.shl.lambdavalidation.validationgroups.GroupConstants
 
-abstract class ThrowingValidationTestHarness[T <: AbstractTestCase :ClassTag] 
+abstract class ThrowingValidationTestHarness[T <: AbstractTestCase :ClassTag]
   extends ThrowTestHarness[T](classTag[T].runtimeClass.asInstanceOf[Class[T]])
-  
-  
-abstract class ReturningValidationTestHarness[T <: AbstractTestCase :ClassTag] 
+
+
+abstract class ReturningValidationTestHarness[T <: AbstractTestCase :ClassTag]
   extends ReturnTestHarness[T](classTag[T].runtimeClass.asInstanceOf[Class[T]])
 
 
@@ -55,19 +55,19 @@ class ThrowingUngroupedTest extends ThrowingValidationTestHarness[ThrowingUngrou
 
 
 class ThrowingGroupedTest extends ThrowingValidationTestHarness[ThrowingGroupedTestCase] {
-  
+
   @Test(dataProvider = "positiveTestCases")
   def positiveTestsStrict(testCase: ThrowingGroupedTestCase) = testValid(testCase, GroupConstants.strict)
-  
+
   @Test(dataProvider = "negativeTestCases", expectedExceptions = Array(classOf[ConstraintViolationException]))
-  def negativeTestsStrict(testCase: ThrowingGroupedTestCase) = testInvalid("start must strictly be less than end", testCase, GroupConstants.strict)  
-  
+  def negativeTestsStrict(testCase: ThrowingGroupedTestCase) = testInvalid("start must strictly be less than end", testCase, GroupConstants.strict)
+
   @Test(dataProvider = "positiveEqualTestCases")
   def positiveTestsNonStrict(testCase: ThrowingGroupedTestCase) = testValid(testCase, GroupConstants.nonstrict)
 
   @Test(dataProvider = "negativeTestCases", expectedExceptions = Array(classOf[ConstraintViolationException]))
   def negativeTestsNonStrict(testCase: ThrowingGroupedTestCase) = testInvalid("start must be less than or equal to end", testCase, GroupConstants.nonstrict)
-  
+
 }
 
 
@@ -81,17 +81,16 @@ class ReturningUngroupedTest extends ReturningValidationTestHarness[ReturningUng
 
 
 class ReturningGroupedTest extends ReturningValidationTestHarness[ReturningGroupedTestCase] {
-  
+
   @Test(dataProvider = "positiveTestCases")
   def positiveTestsStrict(testCase: ReturningGroupedTestCase) = testValid(testCase, GroupConstants.strict)
-  
+
   @Test(dataProvider = "negativeTestCases")
-  def negativeTestsStrict(testCase: ReturningGroupedTestCase) = testInvalid("start must strictly be less than end", testCase, GroupConstants.strict)  
-  
+  def negativeTestsStrict(testCase: ReturningGroupedTestCase) = testInvalid("start must strictly be less than end", testCase, GroupConstants.strict)
+
   @Test(dataProvider = "positiveEqualTestCases")
   def positiveTestsNonStrict(testCase: ReturningGroupedTestCase) = testValid(testCase, GroupConstants.nonstrict)
 
   @Test(dataProvider = "negativeTestCases")
-  def negativeTestsNonStrict(testCase: ReturningGroupedTestCase) = testInvalid("start must be less than or equal to end", testCase, GroupConstants.nonstrict)  
+  def negativeTestsNonStrict(testCase: ReturningGroupedTestCase) = testInvalid("start must be less than or equal to end", testCase, GroupConstants.nonstrict)
 }
-

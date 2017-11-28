@@ -1,6 +1,30 @@
+
+buildscript{
+  repositories{
+    mavenCentral()
+    jcenter()
+  }
+  dependencies { classpath "org.github.ngbinh.scalastyle:gradle-scalastyle-plugin_2.11:0.9.0" }
+}
+
 apply plugin: 'scala'
+
 
 dependencies {
   compile group: 'org.scala-lang', name: 'scala-library', version: '2.12.4'
   compile project(":lambdavalidation.core")
 }
+
+apply plugin: 'scalaStyle'
+
+scalaStyle {
+  configLocation = "${projectDir}/scalastyle.xml"
+  outputFile = "${reportsDir}/scalastyle/result.xml"
+  includeTestSourceDirectory = true
+  failOnViolation = false
+  source = "src/main/scala"
+  testSource = "src/test/scala"
+  quiet = true
+}
+
+tasks['check'].dependsOn scalaStyle

@@ -1,7 +1,26 @@
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
-dependencies {
-  compile project(":lambdavalidation.core")
+dependencies { compile project(":lambdavalidation.core") }
+
+apply plugin: 'findbugs'
+
+findbugs {
+  ignoreFailures = true
+  effort = "max"
+  showProgress = true
+  reportLevel = "high"
+  showProgress = false
+}
+
+tasks.withType(FindBugs) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+
+tasks.withType(JavaCompile) {
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
 }

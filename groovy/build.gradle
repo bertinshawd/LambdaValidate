@@ -4,3 +4,12 @@ dependencies {
   compile localGroovy()
   compile project(":lambdavalidation.core")
 }
+
+apply plugin: 'codenarc'
+
+codenarc {
+  configFile = file("${projectDir}/codenarc.xml")
+  reportFormat = 'html'
+  ignoreFailures = true
+  toolVersion = '1.0'
+}

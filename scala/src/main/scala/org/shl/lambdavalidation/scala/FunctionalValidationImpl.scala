@@ -1,14 +1,14 @@
 /*
  * Copyright © Daniel Bertinshaw, 2017
- * 
+ *
  * See the LICENSE file distributed with this work for additional
- * information regarding copyright ownership.  The ASF licenses 
+ * information regarding copyright ownership.  The ASF licenses
  * this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,14 +22,15 @@ import org.shl.lambdavalidation.{ConstraintFunction => BaseConstraintFunction}
 import org.shl.lambdavalidation.ValidationService
 import javax.validation.ConstraintViolation
 import org.shl.lambdavalidation.SelfValidating
+import org.shl.lambdavalidation.ValidationService.Validator
 
 /**
- * Private trait that mixes in the specific 
+ * Private trait that mixes in the specific
  */
 sealed private[scala] trait ScalaSelfValidating extends SelfValidating  {
   protected type CVSet = java.util.Set[ConstraintViolation[Object]]
-  protected val validator = ValidationService.instance().thrower
-  
+  protected val validator:Validator
+
   override final def validate():CVSet = validator.validate(this)
   override final def validate(groups:Array[Class[_]]):CVSet = validator.validate(this, groups)
 }
@@ -37,7 +38,8 @@ sealed private[scala] trait ScalaSelfValidating extends SelfValidating  {
 /**
  * Trait that implements self-validating behaviour for the throwing validation service.
  */
-trait ThrowingSelfValidating extends ScalaSelfValidating {
+trait ThrowingSelfValidating extends ScalaSelfValidating{
+  override val validator = ValidationService.instance().thrower
 }
 
 /**
@@ -50,8 +52,8 @@ trait ReturningSelfValidating extends ScalaSelfValidating{
 /**
  * Trait that implements welds the scala function trait to the constraint validator interface.
  * Delegates to the apply() method.
- * 
- * The scala compiler will automatically coerce a lambda definition to ConstraintFunction, where the 
+ *
+ * The scala compiler will automatically coerce a lambda definition to ConstraintFunction, where the
  * field is typed as such.
  */
 trait ConstraintFunction extends BaseConstraintFunction with Function0[Boolean] {

@@ -13,22 +13,22 @@ public class ReturningGroupedTest extends ReturningValidationTestHarness<Returni
       
   @Test(dataProvider = "positiveTestCases")
   public void positiveTestsStrict(ReturningGroupedTestCase testCase) {
-    testValid(testCase, GroupConstants.strict);
+    testValid(testCase, GroupConstants.strict());
   }
 
   @Test(dataProvider = "negativeTestCases")
   public void negativeTestsStrict(ReturningGroupedTestCase testCase) {
-    testInvalid("start must strictly be less than end", testCase, GroupConstants.strict);
+    testInvalid("start must strictly be less than end", testCase, GroupConstants.strict());
   }
   
 
   @Test(dataProvider = "positiveEqualTestCases")
   public void positiveTestsNonStrict(ReturningGroupedTestCase testCase) {
-    testValid(testCase, GroupConstants.nonstrict);
+    testValid(testCase, GroupConstants.nonstrict());
   }
 
   @Test(dataProvider = "negativeTestCases")
   public void negativeTestsNonStrict(ReturningGroupedTestCase testCase) {
-    testInvalid("start must be less than or equal to end", testCase, GroupConstants.nonstrict);
+    testInvalid("start must be less than or equal to end", testCase, GroupConstants.nonstrict());
   }
 }

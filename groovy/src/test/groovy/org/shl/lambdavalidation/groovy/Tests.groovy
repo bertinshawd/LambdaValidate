@@ -4,14 +4,14 @@
  * See the LICENSE file distributed with this work for additional
  * information regarding copyright ownership.  The ASF licenses
  * this file to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
+ * 'License'); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
@@ -27,103 +27,102 @@ import org.shl.lambdavalidation.validationgroups.GroupConstants
 import org.testng.annotations.Test
 
 class ExceptionTest extends ThrowingValidationTestHarness<ExceptionTestCase> {
-  
-  public ExceptionTest() {
-    super(ExceptionTestCase.class)
+
+  ExceptionTest() {
+    super(ExceptionTestCase)
   }
 
-  @Test(dataProvider = "positiveTestCases", expectedExceptions=ValidationException.class)
-  public void ExceptionTests(ExceptionTestCase testCase) {
+  @Test(dataProvider = 'positiveTestCases', expectedExceptions=ValidationException)
+  void exceptionTests(ExceptionTestCase testCase) {
     testValid(testCase)
   }
 }
 
 class ThrowingUngroupedTest extends ThrowingValidationTestHarness<ThrowingUngroupedTestCase> {
 
-  public ThrowingUngroupedTest() {
+  ThrowingUngroupedTest() {
     super(ThrowingUngroupedTestCase)
   }
 
-  @Test(dataProvider = "positiveTestCases")
-  public void positiveTests(ThrowingUngroupedTestCase testCase) {
-    testValid(testCase);
+  @Test(dataProvider = 'positiveTestCases')
+  void positiveTests(ThrowingUngroupedTestCase testCase) {
+    testValid(testCase)
   }
 
-  @Test(dataProvider = "negativeTestCases", expectedExceptions = ConstraintViolationException.class)
-  public void negativeTests(ThrowingUngroupedTestCase testCase) {
-    testInvalid("start must be less than end", testCase)
+  @Test(dataProvider = 'negativeTestCases', expectedExceptions = ConstraintViolationException)
+  void negativeTests(ThrowingUngroupedTestCase testCase) {
+    testInvalid('start must be less than end', testCase)
   }
 }
 
 class ThrowingGroupedTest extends ThrowingValidationTestHarness<ThrowingGroupedTestCase> {
 
-  public ThrowingGroupedTest() {
+  ThrowingGroupedTest() {
     super(ThrowingGroupedTestCase)
   }
 
-  @Test(dataProvider = "positiveTestCases")
-  public void positiveTestsStrict(ThrowingGroupedTestCase testCase) {
-    testValid(testCase, GroupConstants.strict);
+  @Test(dataProvider = 'positiveTestCases')
+  void positiveTestsStrict(ThrowingGroupedTestCase testCase) {
+    testValid(testCase, GroupConstants.strict())
   }
 
-  @Test(dataProvider = "negativeTestCases", expectedExceptions = ConstraintViolationException.class)
-  public void negativeTestsStrict(ThrowingGroupedTestCase testCase) {
-    testInvalid("start must strictly be less than end", testCase, GroupConstants.strict);
+  @Test(dataProvider = 'negativeTestCases', expectedExceptions = ConstraintViolationException)
+  void negativeTestsStrict(ThrowingGroupedTestCase testCase) {
+    testInvalid('start must strictly be less than end', testCase, GroupConstants.strict())
   }
 
-  @Test(dataProvider = "positiveEqualTestCases")
-  public void positiveTestsNonStrict(ThrowingGroupedTestCase testCase) {
-    testValid(testCase, GroupConstants.nonstrict);
+  @Test(dataProvider = 'positiveEqualTestCases')
+  void positiveTestsNonStrict(ThrowingGroupedTestCase testCase) {
+    testValid(testCase, GroupConstants.nonstrict())
   }
 
-  @Test(dataProvider = "negativeTestCases", expectedExceptions = ConstraintViolationException.class)
-  public void negativeTestsNonStrict(ThrowingGroupedTestCase testCase) {
-    testInvalid("start must be less than or equal to end", testCase, GroupConstants.nonstrict);
+  @Test(dataProvider = 'negativeTestCases', expectedExceptions = ConstraintViolationException)
+  void negativeTestsNonStrict(ThrowingGroupedTestCase testCase) {
+    testInvalid('start must be less than or equal to end', testCase, GroupConstants.nonstrict())
   }
 }
 
 class ReturningUngroupedTest extends ReturningValidationTestHarness<ReturningUngroupedTestCase> {
 
-  public ReturningUngroupedTest() {
+  ReturningUngroupedTest() {
     super(ReturningUngroupedTestCase)
   }
 
-  @Test(dataProvider = "positiveTestCases")
-  public void positiveTests(ReturningUngroupedTestCase testCase) {
-    testValid(testCase);
+  @Test(dataProvider = 'positiveTestCases')
+  void positiveTests(ReturningUngroupedTestCase testCase) {
+    testValid(testCase)
   }
 
-  @Test(dataProvider = "negativeTestCases")
-  public void negativeTests(ReturningUngroupedTestCase testCase) {
-    testInvalid("start must be less than end", testCase)
+  @Test(dataProvider = 'negativeTestCases')
+  void negativeTests(ReturningUngroupedTestCase testCase) {
+    testInvalid('start must be less than end', testCase)
   }
 }
 
-
 class ReturningGroupedTest extends ReturningValidationTestHarness<ReturningGroupedTestCase> {
 
-  public ReturningGroupedTest() {
+  ReturningGroupedTest() {
     super(ReturningGroupedTestCase)
   }
 
-  @Test(dataProvider = "positiveTestCases")
-  public void positiveTestsStrict(ReturningGroupedTestCase testCase) {
-    testValid(testCase, GroupConstants.strict);
+  @Test(dataProvider = 'positiveTestCases')
+  void positiveTestsStrict(ReturningGroupedTestCase testCase) {
+    testValid(testCase, GroupConstants.strict())
   }
 
-  @Test(dataProvider = "positiveEqualTestCases")
-  public void positiveTestsNonStrict(ReturningGroupedTestCase testCase) {
-    testValid(testCase, GroupConstants.nonstrict);
+  @Test(dataProvider = 'positiveEqualTestCases')
+  void positiveTestsNonStrict(ReturningGroupedTestCase testCase) {
+    testValid(testCase, GroupConstants.nonstrict())
   }
 
-  @Test(dataProvider = "negativeTestCases")
-  public void negativeTestsNonStrict(ReturningGroupedTestCase testCase) {
-    testInvalid("start must be less than or equal to end", testCase, GroupConstants.nonstrict);
+  @Test(dataProvider = 'negativeTestCases')
+  void negativeTestsNonStrict(ReturningGroupedTestCase testCase) {
+    testInvalid('start must be less than or equal to end', testCase, GroupConstants.nonstrict())
   }
 
-  @Test(dataProvider = "negativeTestCases")
-  public void negativeTestsStrict(ReturningGroupedTestCase testCase) {
-    testInvalid("start must strictly be less than end", testCase, GroupConstants.strict);
+  @Test(dataProvider = 'negativeTestCases')
+  void negativeTestsStrict(ReturningGroupedTestCase testCase) {
+    testInvalid('start must strictly be less than end', testCase, GroupConstants.strict())
   }
 }
 

@@ -16,13 +16,13 @@ class for each validation rule.
 
 This leads to three clear problems:
 
-- Sprawling codebase: each constraint requires a constraint annotation 
+* Sprawling codebase: each constraint requires a constraint annotation 
 and a validator class for each validation rule.
-- SPOT violation: The violation logic for your class is embodied elsewhere 
+* SPOT violation: The violation logic for your class is embodied elsewhere 
 and often not immediately apparent, as opposed to the standard constraints like 
 `@NotNull` which is self-explanatory.  Objects should express their own 
 constraints.
-- Low code reuse or brittle generalisation: for most use cases the validator class 
+* Low code reuse or brittle generalisation: for most use cases the validator class 
 needs to either be tied to the concrete type requiring validation so cannot 
 be reused elsewhere, require brittle reflection to look up members, or require
 lifting access to an interface resulting in more code sprawl and possible
@@ -36,6 +36,44 @@ makes sense, it leads to smaller, more concise code.
 If you're adding this to a serialised DTO or a Persistence Object you'll need to 
 advise your serialiser(s)/Persistence layer that the validation functions 
 are `Transient` or `Ignored` or whatever the frameworks use.
+
+## Building
+
+Gradle wrapper is included for this project, with default tasks (in this case `build`). Just invoke the gradle wrapper `gradlew` in the project directory.
+
+### Invocation
+
+* Windows: `C:\repos\lambdavalidation\> gradlew`
+* *nix: `~/repos/lambdavalidation/ $ ./gradlew`
+
+> building with java 7
+> warning!
+
+### Outputs
+
+#### Artifacts
+`./build/libs` will contain the core jar and the jars for each "flavour".
+
+```
+./build/libs/lambdavalidation.groovy-0.1.0.jar
+./build/libs/lambdavalidation.java7-0.1.0.jar
+./build/libs/lambdavalidation.java8-0.1.0.jar
+./build/libs/lambdavalidation.core-0.1.0.jar
+./build/libs/lambdavalidation.scala-0.1.0.jar
+```
+put core and one or more flavours on your classpath to use this.
+
+#### Reports
+
+Aggregate test and coverage reports are available in `./build/reports`
+
+Findbugs is enabled for the java projects, codenarc for groovy, and scalastyle for scala.  You can find sepcific reports at `./${subproject}/build/reports/(findbugs|codenarc|scalastyle)`
+
+### Publishing
+
+No publish tasks have been defined.  Depending on your requirements, you can add one to publish to an in house dependency manager, or add one to publish it to a local maven/ivy repository.
+
+There are no plans at this stage to publish it to mavencentral or similar.
 
 ## Core Components
 
@@ -138,7 +176,7 @@ public class Example implements ThrowingSelfValidator, ConstraintFunctionBuilder
 
 Basically just the core components, with some extensions that make no change to the core components.  This is to prevent namespace pollution.  While this could be used with a static field, the scope of the instance members used for validation would not be available, so it's not advisable.
 
-Because Java7 does not have a lambda function notation, but does have anonymous class closures, you need to implement the `SelfValidator` methods manually.
+Because Java7 does not have a lambda function notation but does have anonymous class closures, you need to implement the `ConstraintFunction` interface manually for each constraint.  Additionally the lack of a mechanism to allow default behaviour of methods means that the `SelfValidate` interface needs to be manually implemented.
 
 
 ```java
@@ -172,11 +210,11 @@ Like Kotlin or Clojure?  Just extend the `ConstraintFunction` core in
 whatever idiomatic way makes sense to you and the language.  
 
 Basically there are just three things to do:
-- Create a `ThrowingSelfValidating` interface/trait/mixin/whatever, which implements the 'throwing' validation behaviour. 
-- Create a `ReturningSelfValidating` interface/trait/mixin/whatever, which implements the 'throwing' validation behaviour. 
-- Create a `ConstraintFunction` that extends the `ConstraintFunction` from core which can be assigned any 
+* Create a `ThrowingSelfValidating` interface/trait/mixin/whatever, which implements the 'throwing' validation behaviour. 
+* Create a `ReturningSelfValidating` interface/trait/mixin/whatever, which implements the 'throwing' validation behaviour. 
+* Create a `ConstraintFunction` that extends the `ConstraintFunction` from core which can be assigned any 
 0-arg lamdba function (or similar) that returns boolean.  Delegate the `validate()` method to calling this closure.
 
 Feel free to send me a pull request if you do this.
 
----
+*--

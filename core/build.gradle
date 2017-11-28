@@ -1,0 +1,25 @@
+
+apply plugin: 'findbugs'
+
+findbugs {
+  ignoreFailures = true
+  effort = "max"
+  showProgress = true
+  reportLevel = "high"
+  showProgress = false
+}
+
+tasks.withType(FindBugs) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+tasks.withType(JavaCompile) {
+  sourceCompatibility = 1.7
+  targetCompatibility = 1.7
+  if (!project['java7BootstrapClassPath'].isEmpty()) {
+    options.bootstrapClasspath = files(project['java7BootstrapClassPath'])
+  }
+}

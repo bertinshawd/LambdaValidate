@@ -30,7 +30,18 @@ import org.shl.lambdavalidation.validationgroups.Strict;
 import org.shl.lambdavalidation.validationgroups.NonStrict;
 import org.shl.lambdavalidation.validationgroups.Strict;
 
-public class GroupConstants {
-  public final static Class<?>[] strict = new Class<?>[] { Strict.class }; 
-  public final static Class<?>[] nonstrict = new Class<?>[] { NonStrict.class };
+public final class GroupConstants {
+  
+  private GroupConstants() {}
+  
+  private final static Class<?>[] strict = new Class<?>[] { Strict.class }; 
+  private final static Class<?>[] nonstrict = new Class<?>[] { NonStrict.class };
+  
+  public static Class<?>[] strict() {
+    return strict;
+  }
+  
+  public static Class<?>[] nonstrict() {
+    return nonstrict;
+  }
 }

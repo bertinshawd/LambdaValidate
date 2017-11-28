@@ -54,10 +54,6 @@ subprojects {
   }
 
   tasks['check'].dependsOn jacocoTestReport
-
-  tasks['check'].doLast {
-    println tasks.withType(AbstractArchiveTask)
-  }
 }
 
 //================ REPORT AGGREGATORS
@@ -72,7 +68,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
   additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
   sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
   classDirectories = files(subprojects.sourceSets.main.output)
-  executionData = files(subprojects.findAll{it.name != 'core'}.jacocoTestReport.executionData)
+  executionData = files(subprojects.findAll{it.name != 'lambdavalidation.core'}.jacocoTestReport.executionData)
   dependsOn subprojects.test.collect{it.path}
   reports {
     html.enabled = true
@@ -106,7 +102,7 @@ assemble {
 
 jar.onlyIf{false}
 
-defaultTasks 'build'
+defaultTasks 'clean', 'build'
 
 check.dependsOn jacocoRootReport
 check.dependsOn testReport
