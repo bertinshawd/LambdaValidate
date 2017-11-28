@@ -48,10 +48,10 @@ Gradle wrapper is included for this project, with default tasks (in this case `b
 
 ### Java 7 classpath :warning:
 
-if you build without setting the bootclasspath for java7 and core, you will get warnings.  There are no known issues created by this, but if you want to get rid of the warnings do one of the following (where `…` = the path to your Java 7 install):
+if you build without setting the bootclasspath for java7 and core, you will get warnings.  There are no known issues created by this, but if you want to get rid of the warnings do one of the following (where `...` = the path to your Java 7 install):
 
-* On the command line: add `-Pjava7BootstrapClassPath=…/rt.jar`
-* In the root properties file: uncomment the line `#java7BootstrapClassPath=…/rt.jar` and comment the line `java7BootstrapClassPath=`
+* On the command line: add `-Pjava7BootstrapClassPath=.../rt.jar`
+* In the root properties file: uncomment the line `#java7BootstrapClassPath=.../rt.jar` and comment the line `java7BootstrapClassPath=`
  * If you do do this, please be careful of the change going upstream.
 
 
