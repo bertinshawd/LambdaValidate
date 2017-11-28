@@ -224,4 +224,4 @@ Basically there are just three things to do:
 
 Feel free to send me a pull request if you do this.
 
-*--
+---
