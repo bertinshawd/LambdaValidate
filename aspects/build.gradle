@@ -27,6 +27,11 @@ tasks.withType(FindBugs) {
     html.enabled = true
   }
 }
+test {
+  jacoco {
+      enabled = false // JaCoCo doesn't like compile time weaving.
+  }
+}
 
 
 tasks.withType(JavaCompile) {
@@ -34,28 +39,32 @@ tasks.withType(JavaCompile) {
   targetCompatibility = 1.7
 }
 
-compileTestJava.doLast{
-  ant.taskdef(
-    resource:"org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties", 
-    classpath: project.buildscript.configurations.classpath.asPath
-  )
-  ant.iajc(
-    source:"1.7",
-    target:"1.7", 
-    destDir:sourceSets.test.output.classesDir.absolutePath, 
-    maxmem:"512m", 
-    fork:"true",
-    aspectPath:configurations.testCompile.asPath,
-    classpath:configurations.testRuntime.asPath
-  ){
-    sourceroots{
-      sourceSets.main.java.srcDirs.each{
-        pathelement(location:it.absolutePath)
-      }
-      sourceSets.test.java.srcDirs.each{
-        pathelement(location:it.absolutePath)
+compileTestJava {
+  doLast{
+    // gradle warning if `classesDir` is used, but this project only has one dir, so this is admissable.
+    String classesDestDir = sourceSets.test.output.classesDirs.collect{it}.head().absolutePath
+    
+    ant.taskdef(
+      resource:"org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
+      classpath: project.buildscript.configurations.classpath.asPath
+    )
+    ant.iajc(
+      source:"1.7",
+      target:"1.7",
+      destDir: classesDestDir,
+      maxmem:"512m",
+      fork:"true",
+      aspectPath:configurations.testCompile.asPath,
+      classpath:configurations.testRuntime.asPath
+    ){
+      sourceroots{
+        sourceSets.main.java.srcDirs.each{
+          pathelement(location:it.absolutePath)
+        }
+        sourceSets.test.java.srcDirs.each{
+          pathelement(location:it.absolutePath)
+        }
       }
     }
   }
 }
-

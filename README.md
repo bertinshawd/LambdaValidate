@@ -224,4 +224,93 @@ Basically there are just three things to do:
 
 Feel free to send me a pull request if you do this.
 
+
+## Execution Validation via Aspects
+
+In addition to the above, there is a project that does pre-and post validation driven by aspectJ.
+It uses custom annotations to specify either parameter validation by `@ValidateParameters` or return value validation by `@ValidateReturnValue`.  These can be applied to methods or constructors.
+
+This particular subproject is not related to the others, and is Java7 compliant.
+
+### Motivation
+
+While there is a `@ValidateOnExecute` annotation in the JSR303 API, it has various limitations:
+
+- It's not aware of groups.  It's perfectly reasonable to have `CreatePhase` and `UpdatePhase` on an object, where the object id must be null and must not be null respectively.
+- It's applied coarsely. This has two implications: 
+  - Validation is an expensive process and it makes sense to only do it when validation is important, but `@ValidateOnExecute` applies to entire classes of methods.  
+  - You may want to pass a potentially invalid object to a method but expect valid results, but the API doesn't distinguish between return and parameter validation (except by adding constraint annotations).
+  - You can't specify validation groups per-method.
+- It's up to the vendor to implement it, generally by weaving or post-processing.  This can often cause issues with other frameworks.  By using aspectJ, you can decide on compile time weaving, load time weaving agents, or another framwork's preferred method (like Spring's aspect autoproxy).
+
+### Build Notes.
+
+JaCoCo is disabled for this project.  It does not like compile time weaving.
+
+`iajc` is used to compile the aspects, via the ant-gradle task.
+
+Otherwise the build is the same as the Java 7 Flavour build.
+
+### Usage 
+
+#### Parameter validation on methods
+
+```java
+@ValidateParameters
+private String method(@NotAConstraint @NotNull String a) {
+  return a.toUpperCase();
+}
+```
+
+#### Return value validation on methods (with groups)
+
+Note that `@Valid` is needed to force validation of objects. 
+
+```java
+public static class SomeObject {
+  @Null(groups = {CreatePhase.class})
+  @NotNull(groups = {UpdatePhase.class})
+  @NotAConstraint
+  private Long id = null;
+}
+
+//...
+@Valid
+@ValidateReturnValue(groups = {CreatePhase.class})
+private SomeObject updatePhaseTest(Long l) {
+  return new SomeObject(l);
+}
+```
+
+#### Parameter validation on constructors
+
+```java
+public static class TestObject {
+  private Long id = null;
+
+  @ValidateParameters
+  public TestObject(@NotNull Long id) {
+    this.id = id;
+  }
+}
+```
+
+#### Return value validation on methods
+
+Note that `@Valid` is needed to force validation of objects. 
+
+```java
+public static class TestObject {
+  @NotNull 
+  private Long id = null;
+
+  @Valid
+  @ValidateReturnValue
+  public TestObject(Long id) {
+    this.id = id;
+  }
+}
+```
+
+
 ---

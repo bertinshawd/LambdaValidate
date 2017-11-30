@@ -1,11 +1,14 @@
 package org.shl.validation.execution.aspects;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
+import java.util.Set;
 
-import javax.validation.Constraint;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
+import javax.validation.ValidationException;
 import javax.validation.executable.ExecutableValidator;
 
 import org.aspectj.lang.JoinPoint;
@@ -19,104 +22,163 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 @Aspect
 public class ValidationAspect {
-  protected static final ExecutableValidator validator = Validation.buildDefaultValidatorFactory().getValidator().forExecutables();
+  /**
+   * The executable validator.
+   */
+  private static final ExecutableValidator validator = Validation.buildDefaultValidatorFactory().getValidator().forExecutables();
 
+  private static final String RETURNVALUE = "return value";
+  private static final String PARAMETERS = "parameters";
+
+  /**
+   * Pointcut for method calls
+   */
   @Pointcut("call(* *.*(..))")
-  protected void methodPC() {}
+  private void methodPC() {
+  }
 
+  /**
+   * Pointcut for constructor calls
+   */
   @Pointcut("call(*.new(..))")
-  protected void constructorPC() {}
+  private void constructorPC() {
+  }
 
+  /**
+   * Pointcut for methods and constructors decorated with
+   * {@link ValidateParameters}
+   */
   @Pointcut("@annotation(ValidateParameters)")
-  protected void validateParam(){}
-  
+  private void validateParam() {
+  }
+
+  /**
+   * Pointcut for methods and constructors decorated with
+   * {@link ValidateReturnValue}
+   */
   @Pointcut("@annotation(ValidateReturnValue)")
-  protected void validateRetVal(){}
- 
-
-  protected boolean constraintExists(Annotation[] annotations) {
-    for (Annotation annotation : annotations) {
-      System.out.println(annotation);
-      for (Annotation annotationOfAnnotation : annotation.annotationType().getAnnotations()) {
-        System.out.println(annotationOfAnnotation);
-        System.out.println(annotationOfAnnotation.annotationType().equals(Constraint.class));
-        if (annotationOfAnnotation.annotationType().equals(Constraint.class)) {
-          return true;
-        }
-      }
-    }
-    return false;
+  private void validateRetVal() {
   }
 
-  protected boolean constraintExists(Annotation[][] annotationLists) {
-    for (Annotation[] annotations : annotationLists) {
-      if (constraintExists(annotations)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  protected Annotation[] returnAnnotations(Constructor<?> e) {
-    return e.getAnnotations();
-  }
-  
-  protected Annotation[] returnAnnotations(Method e) {
-    return e.getAnnotations();
-  }
-  
-  
-  protected Annotation[][] paramAnnotations(Constructor<?> e) {
-    return e.getParameterAnnotations();
-  }
-
-  protected Annotation[][] paramAnnotations(Method e) {
-    return e.getParameterAnnotations();
-  }
-
+  /**
+   * Get the underlying Method for a Signature, to pass to the ExecutionValidator
+   * 
+   * @param sig The AspectJ signature of the method
+   * @return The Java method matching sig
+   * @Throws ValidationException All exceptions are wrapped in ValidationException here.
+   */
   @SuppressWarnings("unchecked")
-  protected Method methodFor(Signature sig) throws NoSuchMethodException, SecurityException {
-      return sig.getDeclaringType().getMethod(sig.getName(), ((MethodSignature) sig).getParameterTypes());
+  private Method methodFor(Signature sig) throws ValidationException {
+    try {
+      return sig.getDeclaringType().getDeclaredMethod(sig.getName(), ((MethodSignature) sig).getParameterTypes());
+    } catch (NoSuchMethodException | SecurityException | ClassCastException e) {
+      throw new ValidationException(e);
+    }
   }
-  
+
+  /**
+   * Get the underlying Constructor for a Signature, to pass to the
+   * ExecutionValidator
+   * 
+   * @param sig The AspectJ signature of the constructor
+   * @return The Java constructor matching sig
+   * @Throws ValidationException All exceptions are wrapped in ValidationException here.
+   */
   @SuppressWarnings("unchecked")
-  protected Constructor<?> constructorFor(Signature sig) throws NoSuchMethodException, SecurityException {
-    return sig.getDeclaringType().getConstructor(((ConstructorSignature) sig).getParameterTypes());
+  private Constructor<?> constructorFor(Signature sig) throws ValidationException {
+    try {
+      return sig.getDeclaringType().getConstructor(((ConstructorSignature) sig).getParameterTypes());
+    } catch (NoSuchMethodException | SecurityException | ClassCastException e) {
+      throw new ValidationException(e);
+    }
   }
-  
-  
 
+  /**
+   * Get the validation groups for the return value
+   * 
+   * @param e The executable who's return value is to be validated
+   * @return The array of Validation Group Classes
+   */
+  private Class<?>[] returnValidationGroups(Executable e) {
+    return e.getAnnotation(ValidateReturnValue.class).groups();
+  }
 
-  @Before("methodPC() && ValidateParameters()")
-  public void validateMethodParameters(JoinPoint jp) throws NoSuchMethodException, SecurityException {
-    System.out.println("method parameter validation");
+  /**
+   * Get the validation groups for the parameters
+   * 
+   * @param e The executable who's parameter values is to be validated
+   * @return The array of Validation Group Classes
+   */
+  private Class<?>[] paramValidationGroups(Executable e) {
+    return e.getAnnotation(ValidateParameters.class).groups();
+  }
+
+  /**
+   * Throws a {@link ConstraintViolationException} for non empty sets of 
+   * 
+   * @param type The display type in the exception message, either "return value"
+   *          or "parameters"
+   * @param ex The executable being validated
+   * @param violations The (possibly empty) set of results from validation.
+   * @throws ConstraintViolationException If violations is non-empty
+   */
+  private void throwWhenNonEmpty(String type, Executable ex, Set<ConstraintViolation<Object>> violations) throws ConstraintViolationException {
+    if (!violations.isEmpty()) {
+      throw new ConstraintViolationException(String.format("Validation of %s failed at %s", type, ex), violations);
+    }
+  }
+
+  /**
+   * Advice that validates the parameters of a method call.
+   * 
+   * @param jp the join point for the pointcut 
+   */
+  @Before("methodPC() && validateParam()")
+  public void validateMethodParameters(JoinPoint jp)  {
     Method method = methodFor(jp.getSignature());
-    System.out.println(jp);
-    System.out.println(method);
-    System.out.println(jp.getThis());
-    System.out.println(jp.getTarget());
-//    validator.validateParameters(object, method, parameterValues, groups)
+    Class<?>[] groups = paramValidationGroups(method);
+    Set<ConstraintViolation<Object>> violations = validator.validateParameters(jp.getTarget(), method, jp.getArgs(), groups);
+    throwWhenNonEmpty(PARAMETERS, method, violations);
   }
-  
+
+  /**
+   * Advice that validates the return value of a method call.
+   * 
+   * @param jp the joinpoint for this pointcut
+   * @param returnValue  The called method's return value
+   */
   @AfterReturning(value = "methodPC() && validateRetVal()", returning = "returnValue")
-  public void validateMethodReturnValue(JoinPoint jp, Object returnValue) throws NoSuchMethodException, SecurityException {
-//    if (checkForConstraints(returnAnnotations(jp.getSignature()))) {
-      System.out.println(returnValue);
-      System.out.println("method return");
-      System.out.println(jp);
-//    }
+  public void validateMethodReturnValue(JoinPoint jp, Object returnValue) {
+    Method method = methodFor(jp.getSignature());
+    Class<?>[] groups = returnValidationGroups(method);
+    Set<ConstraintViolation<Object>> violations = validator.validateReturnValue(jp.getTarget(), method, returnValue, groups);
+    throwWhenNonEmpty(RETURNVALUE, method, violations);
   }
 
-  @Before("constructorPC() && ValidateParameters()")
+  /**
+   * Advice that validates the parameters of a constructor call.
+   * 
+   * @param jp the join point for the pointcut 
+   */
+  @Before("constructorPC() && validateParam()")
   public void validateConstructorParameters(JoinPoint jp) {
-    System.out.println("constructor parameters");
-    System.out.println(jp);
+    Constructor<?> constructor = constructorFor(jp.getSignature());
+    Class<?>[] groups = paramValidationGroups(constructor);
+    Set<ConstraintViolation<Object>> violations = validator.validateConstructorParameters(constructor, jp.getArgs(), groups);
+    throwWhenNonEmpty(PARAMETERS, constructor, violations);
   }
 
+  /**
+   * Advice that validates the return value of a constructor call.
+   * 
+   * @param jp the joinpoint for this pointcut
+   * @param returnValue The called constructor's return value
+   */
   @AfterReturning(value = "constructorPC() && validateRetVal()", returning = "returnValue")
   public void validateConstructorReturnValue(JoinPoint jp, Object returnValue) {
-    System.out.println(returnValue);
-    System.out.println("constructor return");
-    System.out.println(jp);
+    Constructor<?> constructor = constructorFor(jp.getSignature());
+    Class<?>[] groups = returnValidationGroups(constructor);
+    Set<ConstraintViolation<Object>> violations = validator.validateConstructorReturnValue(constructor, returnValue, groups);
+    throwWhenNonEmpty(RETURNVALUE, constructor, violations);
   }
 }

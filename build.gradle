@@ -30,13 +30,13 @@ subprojects {
       }
     }
   }
-
+  
   test {
     useTestNG()
 
     testLogging {
       exceptionFormat = 'full'
-      events "failed", "standardOut", "standardError"
+      events "failed"
     }
 
     ignoreFailures = true // failures in subprojects still allow full reports to be generated
@@ -66,18 +66,18 @@ task testReport(type: TestReport) {
 }
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
-  additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
-  sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
-  classDirectories = files(subprojects.sourceSets.main.output)
-  executionData = files(subprojects.findAll{it.name != 'lambdavalidation.core'}.jacocoTestReport.executionData)
-  dependsOn subprojects.test.collect{it.path}
-  reports {
-    html.enabled = true
-    xml.enabled = false
-    csv.enabled = false
-  }
-  shouldRunAfter subprojects*.check
-  shouldRunAfter testReport
+    additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories = files(subprojects.sourceSets.main.output)
+    executionData = files(files(subprojects.jacocoTestReport.executionData).collect{it}.findAll {it.canRead()})
+    dependsOn subprojects.test.collect{it.path}
+    reports {
+        html.enabled = true
+        xml.enabled = false
+        csv.enabled = false
+    }
+    shouldRunAfter subprojects*.check
+    shouldRunAfter testReport
 }
 
 //================ ROOT PROJECT CONF
@@ -105,6 +105,5 @@ jar.onlyIf{false}
 
 defaultTasks 'clean', 'build'
 
-check.dependsOn jacocoRootReport
 check.dependsOn testReport
 
