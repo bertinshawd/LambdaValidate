@@ -18,15 +18,15 @@
  */
 package org.shl.validation.lambda.scala
 
-import org.shl.validation.lambda.core.AbstractTestCase
+import org.shl.validation.lambda.core.testing.AbstractTestCase
 import org.testng.annotations.Test
 import javax.validation.ConstraintViolationException
 import javax.validation.ValidationException
 import scala.reflect.ClassTag
 import scala.reflect.classTag
 import org.shl.validation.lambda.core.ValidationFunction
-import org.shl.validation.lambda.core.testgroups.{Strict => ValStrict}
-import org.shl.validation.lambda.core.testgroups.{NonStrict => NonValStrict}
+import org.shl.validation.lambda.core.testing.groups.{Strict => ValStrict}
+import org.shl.validation.lambda.core.testing.groups.{NonStrict => NonValStrict}
 
 case class ExceptionTestCase(val s: Integer, val e: Integer) extends AbstractTestCase(s, e) with ThrowingSelfValidating {
   @ValidationFunction(message = "start must be less than end")

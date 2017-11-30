@@ -1,6 +1,6 @@
 package org.shl.validation.lambda.java8;
 
-import org.shl.validation.lambda.core.ReturningValidationTestHarness;
+import org.shl.validation.lambda.core.testing.ReturningValidationTestHarness;
 import org.shl.validation.lambda.java8.testcases.ReturningUngroupedTestCase;
 import org.testng.annotations.Test;
 

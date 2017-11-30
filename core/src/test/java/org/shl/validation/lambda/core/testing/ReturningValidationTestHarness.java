@@ -16,38 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.shl.validation.lambda.core;
+package org.shl.validation.lambda.core.testing;
 
-import javax.validation.ConstraintViolationException;
+import java.util.Set;
 
+import javax.validation.ConstraintViolation;
+
+import org.shl.validation.lambda.core.SelfValidating;
 import org.testng.Assert;
 
-public abstract class ThrowingValidationTestHarness<T extends SelfValidating> extends AbstractValidationTestHarness<T> {
-  public ThrowingValidationTestHarness(Class<T> testCaseClass) {
+public abstract class ReturningValidationTestHarness<T extends SelfValidating> extends AbstractValidationTestHarness<T> {
+  public ReturningValidationTestHarness(Class<T> testCaseClass) {
     super(testCaseClass);
   }
 
   @Override
   protected void testInvalid(final String expectMsg, final T object) {
-    try {
-      object.validate();
-      Assert.fail(String.format("Expected negative test case %s passed validation", object));
-    } catch (ConstraintViolationException cve) {
-      assertions.violationsMatchThrown(object);
-      assertions.constraintsContainMessage(cve, expectMsg);
-      throw cve;
-    }
+    Set<ConstraintViolation<Object>> violations = object.validate();
+    Assert.assertFalse(violations.isEmpty(), "Expected negative test case %s passed validation");
+    assertions.constraintsContainMessage(violations, expectMsg);
   }
 
   @Override
   protected void testInvalid(final String expectMsg, final T object, Class<?>[] groups) {
-    try {
-      object.validate(groups);
-      Assert.fail(String.format("Expected negative test case %s passed validation", object));
-    } catch (ConstraintViolationException cve) {
-      assertions.violationsMatchThrown(object, groups);
-      assertions.constraintsContainMessage(cve, expectMsg);
-      throw cve;
-    }
+    Set<ConstraintViolation<Object>> violations = object.validate(groups);
+    Assert.assertFalse(violations.isEmpty(), "Expected negative test case %s passed validation");
+    assertions.constraintsContainMessage(violations, expectMsg);
   }
 }

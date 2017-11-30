@@ -1,7 +1,7 @@
 package org.shl.validation.lambda.java8.testcases;
 
-import org.shl.validation.lambda.core.AbstractTestCase;
 import org.shl.validation.lambda.core.ValidationFunction;
+import org.shl.validation.lambda.core.testing.AbstractTestCase;
 import org.shl.validation.lambda.java8.ConstraintFunction;
 import org.shl.validation.lambda.java8.ThrowingSelfValidating;
 

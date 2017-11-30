@@ -9,8 +9,8 @@ import javax.validation.ValidationException;
 import org.shl.validation.lambda.java7.SelfValidating;
 import org.shl.validation.lambda.core.ValidationFunction;
 import org.shl.validation.lambda.core.ValidationService;
+import org.shl.validation.lambda.core.testing.AbstractTestCase;
 import org.shl.validation.lambda.java7.ConstraintFunction;
-import org.shl.validation.lambda.core.AbstractTestCase;
 
 public class ExceptionTestCase extends AbstractTestCase implements SelfValidating {
 

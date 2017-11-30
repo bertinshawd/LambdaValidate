@@ -2,8 +2,8 @@ package org.shl.validation.lambda.java7;
 
 import javax.validation.ConstraintViolationException;
 
-import org.shl.validation.lambda.core.ThrowingValidationTestHarness;
-import org.shl.validation.lambda.core.testgroups.GroupConstants;
+import org.shl.validation.lambda.core.testing.groups.GroupConstants;
+import org.shl.validation.lambda.core.testing.ThrowingValidationTestHarness;
 import org.shl.validation.lambda.java7.testcases.GroupedTestCase;
 import org.testng.annotations.Test;
 

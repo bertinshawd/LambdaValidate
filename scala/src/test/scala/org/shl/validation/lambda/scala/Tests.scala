@@ -24,12 +24,12 @@ import javax.validation.ValidationException
 import scala.reflect.ClassTag
 import scala.reflect.classTag
 import org.shl.validation.lambda.core.ValidationFunction
-import org.shl.validation.lambda.core.AbstractTestCase
-import org.shl.validation.lambda.core.{ThrowingValidationTestHarness => ThrowTestHarness}
-import org.shl.validation.lambda.core.{ReturningValidationTestHarness => ReturnTestHarness}
-import org.shl.validation.lambda.core.testgroups.NonStrict
-import org.shl.validation.lambda.core.testgroups.Strict
-import org.shl.validation.lambda.core.testgroups.GroupConstants
+import org.shl.validation.lambda.core.testing.AbstractTestCase
+import org.shl.validation.lambda.core.testing.{ThrowingValidationTestHarness => ThrowTestHarness}
+import org.shl.validation.lambda.core.testing.{ReturningValidationTestHarness => ReturnTestHarness}
+import org.shl.validation.lambda.core.testing.groups.NonStrict
+import org.shl.validation.lambda.core.testing.groups.Strict
+import org.shl.validation.lambda.core.testing.groups.GroupConstants
 
 abstract class ThrowingValidationTestHarness[T <: AbstractTestCase :ClassTag]
   extends ThrowTestHarness[T](classTag[T].runtimeClass.asInstanceOf[Class[T]])

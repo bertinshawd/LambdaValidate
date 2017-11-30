@@ -21,9 +21,9 @@ package org.shl.validation.lambda.groovy
 import javax.validation.ConstraintViolationException
 import javax.validation.ValidationException
 
-import org.shl.validation.lambda.core.ReturningValidationTestHarness
-import org.shl.validation.lambda.core.ThrowingValidationTestHarness
-import org.shl.validation.lambda.core.testgroups.GroupConstants
+import org.shl.validation.lambda.core.testing.ReturningValidationTestHarness
+import org.shl.validation.lambda.core.testing.ThrowingValidationTestHarness
+import org.shl.validation.lambda.core.testing.groups.GroupConstants
 import org.testng.annotations.Test
 
 class ExceptionTest extends ThrowingValidationTestHarness<ExceptionTestCase> {

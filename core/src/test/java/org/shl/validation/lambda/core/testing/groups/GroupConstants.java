@@ -16,11 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.shl.validation.lambda.core.testgroups;
+package org.shl.validation.lambda.core.testing.groups;
 
-/*
- * Used for group based validation.  Shared so that there's no chance 
- * of namespace pollution by redeclaring in downstream projects.
- */
-public interface NonStrict {
+public class GroupConstants {
+  
+  private GroupConstants() {}
+  
+  private final static Class<?>[] strict = new Class<?>[] { Strict.class }; 
+  private final static Class<?>[] nonstrict = new Class<?>[] { NonStrict.class };
+  
+  public static Class<?>[] strict() {
+    return strict;
+  }
+  
+  public static Class<?>[] nonstrict() {
+    return nonstrict;
+  }
 }

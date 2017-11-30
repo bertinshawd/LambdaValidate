@@ -6,12 +6,12 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
-import org.shl.validation.lambda.core.AbstractTestCase;
 import org.shl.validation.lambda.core.SelfValidating;
 import org.shl.validation.lambda.core.ValidationFunction;
 import org.shl.validation.lambda.core.ValidationService;
-import org.shl.validation.lambda.core.testgroups.NonStrict;
-import org.shl.validation.lambda.core.testgroups.Strict;
+import org.shl.validation.lambda.core.testing.AbstractTestCase;
+import org.shl.validation.lambda.core.testing.groups.NonStrict;
+import org.shl.validation.lambda.core.testing.groups.Strict;
 import org.shl.validation.lambda.java7.ConstraintFunction;
 
 /*

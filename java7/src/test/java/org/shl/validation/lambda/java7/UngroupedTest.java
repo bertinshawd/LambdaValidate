@@ -2,7 +2,7 @@ package org.shl.validation.lambda.java7;
 
 import javax.validation.ConstraintViolationException;
 
-import org.shl.validation.lambda.core.ThrowingValidationTestHarness;
+import org.shl.validation.lambda.core.testing.ThrowingValidationTestHarness;
 import org.shl.validation.lambda.java7.testcases.UngroupedTestCase;
 import org.testng.annotations.Test;
 

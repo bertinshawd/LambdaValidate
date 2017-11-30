@@ -1,7 +1,7 @@
 package org.shl.validation.lambda.java8;
 
-import org.shl.validation.lambda.core.ReturningValidationTestHarness;
-import org.shl.validation.lambda.core.testgroups.GroupConstants;
+import org.shl.validation.lambda.core.testing.groups.GroupConstants;
+import org.shl.validation.lambda.core.testing.ReturningValidationTestHarness;
 import org.shl.validation.lambda.java8.testcases.ReturningGroupedTestCase;
 import org.testng.annotations.Test;
 

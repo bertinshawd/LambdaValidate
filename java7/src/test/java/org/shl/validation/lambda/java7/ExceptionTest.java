@@ -2,7 +2,7 @@ package org.shl.validation.lambda.java7;
 
 import javax.validation.ValidationException;
 
-import org.shl.validation.lambda.core.ThrowingValidationTestHarness;
+import org.shl.validation.lambda.core.testing.ThrowingValidationTestHarness;
 import org.shl.validation.lambda.java7.testcases.ExceptionTestCase;
 import org.testng.annotations.Test;
 

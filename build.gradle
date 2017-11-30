@@ -23,10 +23,11 @@ subprojects {
     testRuntime group: 'org.apache.tomcat', name: 'tomcat-jasper-el', version: '9.0.1'
   }
 
-  println it.name
-  sourceSets {
-    test {
-      java { srcDir '../core/src/test/java' }
+  if( it.name.matches("validation\\.lambda\\..*")) {
+    sourceSets {
+      test {
+        java { srcDir '../core/src/test/java' }
+      }
     }
   }
 

@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.shl.validation.lambda.core.testgroups;
+package org.shl.validation.lambda.core.testing.groups;
 
 /*
  * Used for group based validation.  Shared so that there's no chance 
  * of namespace pollution by redeclaring in downstream projects.
  */
-public interface Strict {
+public interface NonStrict {
 }

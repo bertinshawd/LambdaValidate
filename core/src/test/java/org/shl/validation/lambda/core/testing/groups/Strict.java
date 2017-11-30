@@ -16,21 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.shl.validation.lambda.core;
+package org.shl.validation.lambda.core.testing.groups;
 
-
-
-public abstract class AbstractTestCase implements SelfValidating {
-
-   protected Integer start, end;
-
-   public AbstractTestCase(final Integer start, final Integer end) {
-      this.start = start;
-      this.end = end;
-   }
-
-   @Override
-   public String toString() {
-      return String.format("%s[%s,%s]", this.getClass().getSimpleName(), start, end);
-   }
+/*
+ * Used for group based validation.  Shared so that there's no chance 
+ * of namespace pollution by redeclaring in downstream projects.
+ */
+public interface Strict {
 }

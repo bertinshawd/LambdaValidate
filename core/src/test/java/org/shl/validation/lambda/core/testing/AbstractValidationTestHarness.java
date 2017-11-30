@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.shl.validation.lambda.core;
+package org.shl.validation.lambda.core.testing;
 
 
 import java.lang.reflect.Constructor;
@@ -30,6 +30,8 @@ import javax.validation.ValidationException;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.shl.validation.lambda.core.SelfValidating;
+import org.shl.validation.lambda.core.ValidationService;
 import org.shl.validation.lambda.core.ValidationService.Validator;
 import org.testng.annotations.DataProvider;
 

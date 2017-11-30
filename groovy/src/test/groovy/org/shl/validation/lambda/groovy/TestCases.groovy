@@ -18,10 +18,10 @@
  */
 package org.shl.validation.lambda.groovy
 
-import org.shl.validation.lambda.core.AbstractTestCase
+import org.shl.validation.lambda.core.testing.AbstractTestCase
 import org.shl.validation.lambda.core.ValidationFunction
-import org.shl.validation.lambda.core.testgroups.NonStrict
-import org.shl.validation.lambda.core.testgroups.Strict
+import org.shl.validation.lambda.core.testing.groups.NonStrict
+import org.shl.validation.lambda.core.testing.groups.Strict
 
 class TestException extends RuntimeException {
 }

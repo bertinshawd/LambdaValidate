@@ -16,23 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.shl.validation.lambda.core.testgroups;
+package org.shl.validation.lambda.core.testing;
 
-import org.shl.validation.lambda.core.testgroups.NonStrict;
-import org.shl.validation.lambda.core.testgroups.Strict;
+import org.shl.validation.lambda.core.SelfValidating;
 
-public final class GroupConstants {
-  
-  private GroupConstants() {}
-  
-  private final static Class<?>[] strict = new Class<?>[] { Strict.class }; 
-  private final static Class<?>[] nonstrict = new Class<?>[] { NonStrict.class };
-  
-  public static Class<?>[] strict() {
-    return strict;
-  }
-  
-  public static Class<?>[] nonstrict() {
-    return nonstrict;
-  }
+public abstract class AbstractTestCase implements SelfValidating {
+
+   protected Integer start, end;
+
+   public AbstractTestCase(final Integer start, final Integer end) {
+      this.start = start;
+      this.end = end;
+   }
+
+   @Override
+   public String toString() {
+      return String.format("%s[%s,%s]", this.getClass().getSimpleName(), start, end);
+   }
 }
