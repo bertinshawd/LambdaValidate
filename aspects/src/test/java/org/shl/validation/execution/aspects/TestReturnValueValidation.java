@@ -26,15 +26,14 @@ public class TestReturnValueValidation {
     return a.toUpperCase();
   }
   
-  @NotAConstraint
-  @ValidateOnExecution
-  public String validParams(@NotAConstraint @NotNull String a) {
+  @ValidateParameters(groups= {CreateGroup.class})
+  public String validParamsCreateGroup(@NotAConstraint @NotNull String a) {
     return a.toUpperCase();
   }
 
   @NotNull
   @NotAConstraint
-  @ValidateOnExecution
+  @ValidateReturnValue
   public String validMixed(@NotAConstraint @NotNull String a) {
     if (breakIt) {
       return null;
@@ -46,10 +45,11 @@ public class TestReturnValueValidation {
   
   @Test()
   public void aspectTests() {
+    System.out.println(this);
     System.out.println(1);
 //    validReturn("");
     System.out.println(2);
-    validParams("");
+    validParamsCreateGroup("");
     System.out.println(3);
 //    validMixed("");
     System.out.println(4);

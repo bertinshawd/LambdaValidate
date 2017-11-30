@@ -1,6 +1,7 @@
 package org.shl.validation.execution.aspects;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import javax.validation.Constraint;
@@ -18,30 +19,28 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 @Aspect
 public class ValidationAspect {
-  private static final ExecutableValidator executableValidator = Validation.buildDefaultValidatorFactory().getValidator().forExecutables();
+  protected static final ExecutableValidator validator = Validation.buildDefaultValidatorFactory().getValidator().forExecutables();
 
   @Pointcut("call(* *.*(..))")
-  public void callPC() {
-  }
+  protected void methodPC() {}
 
   @Pointcut("call(*.new(..))")
-  public void constructorPC() {
-  }
+  protected void constructorPC() {}
 
   @Pointcut("@annotation(ValidateParameters)")
-  public void validateParam(){}
+  protected void validateParam(){}
   
   @Pointcut("@annotation(ValidateReturnValue)")
-  public void validateRetVal(){}
+  protected void validateRetVal(){}
  
 
-  private boolean checkForConstraints(Annotation[] annotations) {
+  protected boolean constraintExists(Annotation[] annotations) {
     for (Annotation annotation : annotations) {
       System.out.println(annotation);
-      for (Annotation annotationsAnnotation : annotation.annotationType().getAnnotations()) {
-        System.out.println(annotationsAnnotation);
-        System.out.println(annotationsAnnotation.annotationType().equals(Constraint.class));
-        if (annotationsAnnotation.annotationType().equals(Constraint.class)) {
+      for (Annotation annotationOfAnnotation : annotation.annotationType().getAnnotations()) {
+        System.out.println(annotationOfAnnotation);
+        System.out.println(annotationOfAnnotation.annotationType().equals(Constraint.class));
+        if (annotationOfAnnotation.annotationType().equals(Constraint.class)) {
           return true;
         }
       }
@@ -49,54 +48,63 @@ public class ValidationAspect {
     return false;
   }
 
-  private boolean checkForConstraints(Annotation[][] annotationLists) {
+  protected boolean constraintExists(Annotation[][] annotationLists) {
     for (Annotation[] annotations : annotationLists) {
-      if (checkForConstraints(annotations)) {
+      if (constraintExists(annotations)) {
         return true;
       }
     }
     return false;
   }
 
-  private Annotation[] returnAnnotations(Signature sig) throws NoSuchMethodException, SecurityException {
-    Class<?> declaringType = sig.getDeclaringType();
-    if (sig instanceof MethodSignature) {
-      return declaringType.getMethod(sig.getName(), ((MethodSignature) sig).getParameterTypes()).getAnnotations();
-    }
-    if (sig instanceof ConstructorSignature) {
-      return declaringType.getConstructor(((ConstructorSignature) sig).getParameterTypes()).getAnnotations();
-    } // TODO: falloff exceptions are bad.
-    throw new IllegalArgumentException(String.format("Signature `%s` is not a method or constructor signature", sig));
+  protected Annotation[] returnAnnotations(Constructor<?> e) {
+    return e.getAnnotations();
+  }
+  
+  protected Annotation[] returnAnnotations(Method e) {
+    return e.getAnnotations();
+  }
+  
+  
+  protected Annotation[][] paramAnnotations(Constructor<?> e) {
+    return e.getParameterAnnotations();
+  }
+
+  protected Annotation[][] paramAnnotations(Method e) {
+    return e.getParameterAnnotations();
   }
 
   @SuppressWarnings("unchecked")
-  private Method methodFor(Signature sig) throws NoSuchMethodException, SecurityException {
+  protected Method methodFor(Signature sig) throws NoSuchMethodException, SecurityException {
       return sig.getDeclaringType().getMethod(sig.getName(), ((MethodSignature) sig).getParameterTypes());
   }
   
   @SuppressWarnings("unchecked")
-  private Method constructorFor(Signature sig) throws NoSuchMethodException, SecurityException {
-    return sig.getDeclaringType().getMethod(sig.getName(), ((ConstructorSignature) sig).getParameterTypes());
+  protected Constructor<?> constructorFor(Signature sig) throws NoSuchMethodException, SecurityException {
+    return sig.getDeclaringType().getConstructor(((ConstructorSignature) sig).getParameterTypes());
   }
   
   
-  private Class<?>[] noGroups = {};
 
-  @Before(value = "callPC() && ValidateParameters()")
+
+  @Before("methodPC() && ValidateParameters()")
   public void validateMethodParameters(JoinPoint jp) throws NoSuchMethodException, SecurityException {
+    System.out.println("method parameter validation");
     Method method = methodFor(jp.getSignature());
-    if (checkForConstraints(method.getParameterAnnotations())) {
-      executableValidator.validateParameters(jp.getThis(), method, jp.getArgs(), noGroups);
-    }
+    System.out.println(jp);
+    System.out.println(method);
+    System.out.println(jp.getThis());
+    System.out.println(jp.getTarget());
+//    validator.validateParameters(object, method, parameterValues, groups)
   }
-
-  @AfterReturning(value = "callPC() && validateRetVal()", returning = "returnValue")
+  
+  @AfterReturning(value = "methodPC() && validateRetVal()", returning = "returnValue")
   public void validateMethodReturnValue(JoinPoint jp, Object returnValue) throws NoSuchMethodException, SecurityException {
-    if (checkForConstraints(returnAnnotations(jp.getSignature()))) {
+//    if (checkForConstraints(returnAnnotations(jp.getSignature()))) {
       System.out.println(returnValue);
       System.out.println("method return");
       System.out.println(jp);
-    }
+//    }
   }
 
   @Before("constructorPC() && ValidateParameters()")
