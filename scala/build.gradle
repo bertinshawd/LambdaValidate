@@ -12,7 +12,7 @@ apply plugin: 'scala'
 
 dependencies {
   compile group: 'org.scala-lang', name: 'scala-library', version: '2.12.4'
-  compile project(":lambdavalidation.core")
+  compile project(":validation.lambda.core")
 }
 
 apply plugin: 'scalaStyle'

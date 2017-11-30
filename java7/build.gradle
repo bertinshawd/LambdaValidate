@@ -1,5 +1,5 @@
 
-dependencies { compile project(":lambdavalidation.core") }
+dependencies { compile project(":validation.lambda.core") }
 
 apply plugin: 'findbugs'
 

@@ -2,7 +2,7 @@ apply plugin:'groovy'
 
 dependencies {
   compile localGroovy()
-  compile project(":lambdavalidation.core")
+  compile project(":validation.lambda.core")
 }
 
 apply plugin: 'codenarc'
