@@ -1,0 +1,61 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.aspectj:aspectjtools:1.8.13"
+  }
+}
+
+dependencies { 
+  compile 'org.aspectj:aspectjrt:1.8.13'
+}
+
+apply plugin: 'findbugs'
+
+findbugs {
+  ignoreFailures = true
+  effort = "max"
+  showProgress = true
+  reportLevel = "high"
+  showProgress = false
+}
+
+tasks.withType(FindBugs) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+
+tasks.withType(JavaCompile) {
+  sourceCompatibility = 1.7
+  targetCompatibility = 1.7
+}
+
+compileTestJava.doLast{
+  ant.taskdef(
+    resource:"org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties", 
+    classpath: project.buildscript.configurations.classpath.asPath
+  )
+  ant.iajc(
+    source:"1.7",
+    target:"1.7", 
+    destDir:sourceSets.test.output.classesDir.absolutePath, 
+    maxmem:"512m", 
+    fork:"true",
+    aspectPath:configurations.testCompile.asPath,
+    classpath:configurations.testRuntime.asPath
+  ){
+    sourceroots{
+      sourceSets.main.java.srcDirs.each{
+        pathelement(location:it.absolutePath)
+      }
+      sourceSets.test.java.srcDirs.each{
+        pathelement(location:it.absolutePath)
+      }
+    }
+  }
+}
+
