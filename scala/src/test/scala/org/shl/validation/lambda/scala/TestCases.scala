@@ -25,8 +25,8 @@ import javax.validation.ValidationException
 import scala.reflect.ClassTag
 import scala.reflect.classTag
 import org.shl.validation.lambda.core.ValidationFunction
-import org.shl.validation.lambda.core.testing.groups.{Strict => ValStrict}
-import org.shl.validation.lambda.core.testing.groups.{NonStrict => NonValStrict}
+import org.shl.validation.lambda.core.testing.groups.StrictGroup
+import org.shl.validation.lambda.core.testing.groups.NonStrictGroup
 
 case class ExceptionTestCase(val s: Integer, val e: Integer) extends AbstractTestCase(s, e) with ThrowingSelfValidating {
   @ValidationFunction(message = "start must be less than end")
@@ -39,11 +39,11 @@ case class ThrowingUngroupedTestCase(val s: Integer, val e: Integer) extends Abs
 }
 
 case class ThrowingGroupedTestCase(val s: Integer, val e: Integer) extends AbstractTestCase(s, e) with ThrowingSelfValidating {
-  @ValidationFunction(message = "start must strictly be less than end", groups = Array(classOf[ValStrict]))
-  val startLessThanEndValStrict: ConstraintFunction = () => { start < end }
+  @ValidationFunction(message = "start must strictly be less than end", groups = Array(classOf[StrictGroup]))
+  val startLessThanEndStrictGroup: ConstraintFunction = () => { start < end }
 
-  @ValidationFunction(message = "start must be less than or equal to end", groups = Array(classOf[NonValStrict]))
-  val startLessThanEndNonValStrict = ConstraintFunction { start <= end };
+  @ValidationFunction(message = "start must be less than or equal to end", groups = Array(classOf[NonStrictGroup]))
+  val startLessThanEndNonStrictGroup = ConstraintFunction { start <= end };
 }
 
 
@@ -53,9 +53,9 @@ case class ReturningUngroupedTestCase(val s: Integer, val e: Integer) extends Ab
 }
 
 case class ReturningGroupedTestCase(val s: Integer, val e: Integer) extends AbstractTestCase(s, e) with ReturningSelfValidating {
-  @ValidationFunction(message = "start must strictly be less than end", groups = Array(classOf[ValStrict]))
-  val startLessThanEndValStrict = ConstraintFunction { start < end }
+  @ValidationFunction(message = "start must strictly be less than end", groups = Array(classOf[StrictGroup]))
+  val startLessThanEndStrictGroup = ConstraintFunction { start < end }
 
-  @ValidationFunction(message = "start must be less than or equal to end", groups = Array(classOf[NonValStrict]))
-  val startLessThanEndNonValStrict = ConstraintFunction { start <= end };
+  @ValidationFunction(message = "start must be less than or equal to end", groups = Array(classOf[NonStrictGroup]))
+  val startLessThanEndNonStrictGroup = ConstraintFunction { start <= end };
 }

@@ -18,10 +18,10 @@
  */
 package org.shl.validation.lambda.groovy
 
-import org.shl.validation.lambda.core.testing.AbstractTestCase
 import org.shl.validation.lambda.core.ValidationFunction
-import org.shl.validation.lambda.core.testing.groups.NonStrict
-import org.shl.validation.lambda.core.testing.groups.Strict
+import org.shl.validation.lambda.core.testing.AbstractTestCase
+import org.shl.validation.lambda.core.testing.groups.NonStrictGroup
+import org.shl.validation.lambda.core.testing.groups.StrictGroup
 
 class TestException extends RuntimeException {
 }
@@ -39,10 +39,10 @@ class ThrowingGroupedTestCase extends AbstractTestCase implements ThrowingSelfVa
   ThrowingGroupedTestCase(Integer start, Integer end) {
     super(start, end)
   }
-  @ValidationFunction(message = 'start must strictly be less than end', groups = Strict)
+  @ValidationFunction(message = 'start must strictly be less than end', groups = StrictGroup)
   private final ConstraintFunction startLessThanEndStrict = constraintFunction { start < end }
 
-  @ValidationFunction(message = 'start must be less than or equal to end', groups = NonStrict)
+  @ValidationFunction(message = 'start must be less than or equal to end', groups = NonStrictGroup)
   private final ConstraintFunction startLessThanEndNonStrict = constraintFunction { start <= end }
 }
 
@@ -59,10 +59,10 @@ class ReturningGroupedTestCase extends AbstractTestCase implements ReturningSelf
   ReturningGroupedTestCase(Integer start, Integer end) {
     super(start, end)
   }
-  @ValidationFunction(message = 'start must strictly be less than end', groups = Strict)
+  @ValidationFunction(message = 'start must strictly be less than end', groups = StrictGroup)
   private final ConstraintFunction startLessThanEndStrict = constraintFunction { start < end }
 
-  @ValidationFunction(message = 'start must be less than or equal to end', groups = NonStrict)
+  @ValidationFunction(message = 'start must be less than or equal to end', groups = NonStrictGroup)
   private final ConstraintFunction startLessThanEndNonStrict = constraintFunction { start <= end }
 }
 

@@ -25,18 +25,18 @@ import scala.reflect.ClassTag
 import scala.reflect.classTag
 import org.shl.validation.lambda.core.ValidationFunction
 import org.shl.validation.lambda.core.testing.AbstractTestCase
-import org.shl.validation.lambda.core.testing.{ThrowingValidationTestHarness => ThrowTestHarness}
-import org.shl.validation.lambda.core.testing.{ReturningValidationTestHarness => ReturnTestHarness}
-import org.shl.validation.lambda.core.testing.groups.NonStrict
-import org.shl.validation.lambda.core.testing.groups.Strict
+import org.shl.validation.lambda.core.testing.{ThrowingValidationTestHarness => CoreThrowingValidationTestHarness}
+import org.shl.validation.lambda.core.testing.{ReturningValidationTestHarness => CoreReturningValidationTestHarness}
+//import org.shl.validation.lambda.core.testing.groups.NonStrictGroup
+//import org.shl.validation.lambda.core.testing.groups.StrictGroup
 import org.shl.validation.lambda.core.testing.groups.GroupConstants
 
 abstract class ThrowingValidationTestHarness[T <: AbstractTestCase :ClassTag]
-  extends ThrowTestHarness[T](classTag[T].runtimeClass.asInstanceOf[Class[T]])
+  extends CoreThrowingValidationTestHarness[T](classTag[T].runtimeClass.asInstanceOf[Class[T]])
 
 
 abstract class ReturningValidationTestHarness[T <: AbstractTestCase :ClassTag]
-  extends ReturnTestHarness[T](classTag[T].runtimeClass.asInstanceOf[Class[T]])
+  extends CoreReturningValidationTestHarness[T](classTag[T].runtimeClass.asInstanceOf[Class[T]])
 
 
 class ExceptionTest extends ThrowingValidationTestHarness[ExceptionTestCase] {

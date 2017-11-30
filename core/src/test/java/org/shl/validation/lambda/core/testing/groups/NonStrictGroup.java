@@ -22,5 +22,5 @@ package org.shl.validation.lambda.core.testing.groups;
  * Used for group based validation.  Shared so that there's no chance 
  * of namespace pollution by redeclaring in downstream projects.
  */
-public interface Strict {
+public interface NonStrictGroup {
 }

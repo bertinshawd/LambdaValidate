@@ -22,8 +22,8 @@ public class GroupConstants {
   
   private GroupConstants() {}
   
-  private final static Class<?>[] strict = new Class<?>[] { Strict.class }; 
-  private final static Class<?>[] nonstrict = new Class<?>[] { NonStrict.class };
+  private final static Class<?>[] strict = new Class<?>[] { StrictGroup.class }; 
+  private final static Class<?>[] nonstrict = new Class<?>[] { NonStrictGroup.class };
   
   public static Class<?>[] strict() {
     return strict;

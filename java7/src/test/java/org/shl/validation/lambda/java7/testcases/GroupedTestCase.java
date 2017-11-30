@@ -10,8 +10,8 @@ import org.shl.validation.lambda.core.SelfValidating;
 import org.shl.validation.lambda.core.ValidationFunction;
 import org.shl.validation.lambda.core.ValidationService;
 import org.shl.validation.lambda.core.testing.AbstractTestCase;
-import org.shl.validation.lambda.core.testing.groups.NonStrict;
-import org.shl.validation.lambda.core.testing.groups.Strict;
+import org.shl.validation.lambda.core.testing.groups.NonStrictGroup;
+import org.shl.validation.lambda.core.testing.groups.StrictGroup;
 import org.shl.validation.lambda.java7.ConstraintFunction;
 
 /*
@@ -35,7 +35,7 @@ public class GroupedTestCase extends AbstractTestCase implements SelfValidating 
     return ValidationService.instance().thrower.validate(this, groups);
   }
 
-  @ValidationFunction(message = "start must strictly be less than end", groups = Strict.class)
+  @ValidationFunction(message = "start must strictly be less than end", groups = StrictGroup.class)
   private final ConstraintFunction startLessThanEndStrict = new ConstraintFunction() {
     @Override
     public boolean validate() {
@@ -43,7 +43,7 @@ public class GroupedTestCase extends AbstractTestCase implements SelfValidating 
     }
   };
 
-  @ValidationFunction(message = "start must be less than or equal to end", groups = NonStrict.class)
+  @ValidationFunction(message = "start must be less than or equal to end", groups = NonStrictGroup.class)
   private final ConstraintFunction startLessThanEndNonStrict = new ConstraintFunction() {
     @Override
     public boolean validate() {

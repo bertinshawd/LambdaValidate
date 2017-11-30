@@ -24,7 +24,6 @@ import javax.validation.ConstraintViolationException
 import org.shl.validation.lambda.core.SelfValidating
 import org.shl.validation.lambda.core.ValidationService
 
-
 /**
  * Trait that implements self-validating behaviour for the returning validation service.
  */
