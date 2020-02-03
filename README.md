@@ -161,8 +161,8 @@ An instance field of type `ConstraintFunction` can be used with `constraingFunct
 
 As with Java8, while this could be used with a static field, the scope of the instance members used for validation would not be available, so it's not advisable.  Again, as with Java8 It's advisable to make it `final` since constraints are immutable.
 
-Sepcific to Groovy `def` is treated as an `Object`, this means you need to declare constraint functions as type `ConstraintFunction`, or there will be a `ValidationException` because the JSR303 spec does not 
-require the instance's runtime ttype type to be inspected, but uses the field's declared type.
+In Groovy `def` is treated as an `Object`, this means you need to declare constraint functions as type `ConstraintFunction`, or there will be a `ValidationException` because the JSR303 spec does not 
+require the instance's runtime type type to be inspected, but uses the field's declared type.
 
 Two traits with default methods are provided: `ThrowingSelfValidating` and `ReturningSelfValidating`, which add self validating behaviour that throws exceptions or returns sets in that order.  Both these traits are extensions of `SelfValidating` interface in the core.
 
@@ -217,8 +217,8 @@ Like Kotlin or Clojure?  Just extend the `ConstraintFunction` core in
 whatever idiomatic way makes sense to you and the language.  
 
 Basically there are just three things to do:
-* Create a `ThrowingSelfValidating` interface/trait/mixin/whatever, which implements the 'throwing' validation behaviour. 
-* Create a `ReturningSelfValidating` interface/trait/mixin/whatever, which implements the 'throwing' validation behaviour. 
+* Create a `ThrowingSelfValidating` interface/trait/mixin/whatever, which implements the validation behaviour "on violation throw exception": note that you should collect all violations applicable before throwing. 
+* Create a `ReturningSelfValidating` interface/trait/mixin/whatever, which implements the validation behaviour "on violation return list of violations": note that you should collect all violations applicable before returning.  
 * Create a `ConstraintFunction` that extends the `ConstraintFunction` from core which can be assigned any 
 0-arg lamdba function (or similar) that returns boolean.  Delegate the `validate()` method to calling this closure.
 
